@@ -1,25 +1,23 @@
+// Create web server
 const express = require('express');
-const router = express.Router();
-
-// create a route for comments
-router.get('/comments', (req, res) => {
-  res.send('Get all comments');
-});
-
-// create a route for comments/:id
-router.get('/comments/:id', (req, res) => {
-  res.send(`Get comment with ID: ${req.params.id}`);
-});
-
-// export the router
-module.exports = router;
-
-// create web server
 const app = express();
-const port = 3000;
+const path = require('path');
 
-app.use('/', router);
+// Import comment.js
+const comment = require('./comment');
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Import body-parser
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Create a route for the comments
+app.post('/comments', (req, res) => {
+  const name = req.body.name;
+  const comment = req.body.comment;
+  res.send(comment.createComment(name, comment));
+});
+
+// Start the server
+app.listen(4001, () => {
+  console.log('Server is listening on port 4001');
 });
